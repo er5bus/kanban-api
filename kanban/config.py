@@ -3,25 +3,25 @@ import os
 
 class Config:
     SECRET_KEY = os.getenv("SECRET_KEY", "hard to guess string")
-    PROJECT_DIR = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
+    PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-
-    TASK_PER_PAGE = 20
 
     @classmethod
     def init_app(cls, app):
         pass
 
-class DevConfig(Config):
-    SQLALCHEMY_DATABASE_URI = os.getenv("DEV_DATABASE_URL", "sqlite:///{0}/db/data-dev.sqlite".format(Config.PROJECT_DIR))
+
+class DevelopmentConfig(Config):
+    SQLALCHEMY_DATABASE_URI = os.getenv('DEV_DATABASE_URL', 'sqlite:///' + os.path.join(Config.PROJECT_DIR, 'data', 'data-dev.sqlite'))
+    DEBUG= True
 
 
-class TestConfig(Config):
-    SQLALCHEMY_DATABASE_URI = os.getenv("TEST_DATABASE_URL", "sqlite:///{0}/db/data-test.sqlite".format(Config.PROJECT_DIR))
+class TestingConfig(Config):
+    SQLALCHEMY_DATABASE_URI = os.getenv('TEST_DATABASE_URL', 'sqlite:///' +  os.path.join(Config.PROJECT_DIR, 'data', 'data-test.sqlite'))
 
 
-class ProdConfig(Config):
-    SQLALCHEMY_DATABASE_URI = os.getenv("PROD_DATABASE_URL", "sqlite:///{0}/db/data-prod.sqlite".format(Config.PROJECT_DIR))
+class ProductionConfig(Config):
+    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL', 'sqlite:///' +  os.path.join(Config.PROJECT_DIR, 'data', 'data.sqlite'))
 
     @classmethod
     def init_app(cls, app):
@@ -34,8 +34,8 @@ class ProdConfig(Config):
 
 
 config = {
-    "default": DevConfig,
-    "dev": DevConfig,
-    "test": TestConfig,
-    "prod": ProdConfig
+    "default": DevelopmentConfig,
+    "development": DevelopmentConfig,
+    "testing": TestingConfig,
+    "production": ProductionConfig
 }

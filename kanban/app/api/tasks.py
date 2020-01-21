@@ -1,4 +1,4 @@
-from flask import request
+from flask import request, current_app
 from flask.views import MethodView
 from ..models import Task, db
 from ..schemas import TaskSchema

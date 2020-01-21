@@ -6,8 +6,10 @@ services:
     ports:
       - "5000:5000"
     environment:
-      - FLASK_CONFIG=PROD
+      - FLASK_CONFIG=production
+      - FLASK_ENV=PROD
       - MIGRATE_DB=1
     volumes:
       - ./kanban:/kanban
+      - ./data:/data:rw
 

@@ -5,19 +5,18 @@ LABEL MAINTAINER="Rami sfari <rami2sfari@gmail.com>"
 # Export Flask env varibles
 ENV FLASK_APP manage:app
 
-COPY ./requirements.txt ./requirements.txt
-
-# Install Dependencies
+# Copy and Install Dependencies
+COPY ./requirements.txt /requirements.txt
 RUN ["pip", "install", "-r", "/requirements.txt"]
-
-# Copy files
-ADD ./kanban /kanban
-ADD ./db /db
-WORKDIR /kanban
 
 # Create New user & group
 RUN groupadd -r uswgi && useradd -r -g uswgi uswgi
 USER uswgi
+
+# Copy project files
+COPY ./kanban /kanban
+
+WORKDIR /kanban
 
 EXPOSE 5000 9191
 
