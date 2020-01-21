@@ -20,9 +20,9 @@ def create_app(config_name):
     db.init_app(app)
     migrate.init_app(app, db)
     ma.init_app(app)
-    cors.init_app(app)
 
     from .api import api as api_blueprint
     app.register_blueprint(api_blueprint, url_prefix="/api")
+    cors.init_app(app, resources={r"/api/*": {"origins": "*"}})
 
     return app
