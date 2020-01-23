@@ -1,11 +1,12 @@
 from flask import request, current_app
 from flask.views import MethodView
+from ..mixin import CORSPreflightMixin
 from ..models import Task, db
 from ..schemas import TaskSchema
 from . import api
 
 
-class TaskAPI(MethodView):
+class TaskAPI(MethodView, CORSPreflightMixin):
 
     def __init__(self):
         self.task_schema = TaskSchema()
@@ -37,9 +38,9 @@ class TaskAPI(MethodView):
         db.session.remove(task)
         db.session.commit()
 
-        return dict(code=204), 204
+        return {}, 204
 
-    def put (self, task_id):
+    def put(self, task_id):
         try:
             task = Task.query.get_or_404(task_id)
             data = self.task_schema.load(request.json, partial=True, unknown=True)
@@ -57,5 +58,5 @@ class TaskAPI(MethodView):
 
 
 task_view = TaskAPI.as_view('task_api')
-api.add_url_rule('/tasks/', view_func=task_view, methods=['GET', 'POST'])
-api.add_url_rule('/tasks/<string:task_id>', view_func=task_view, methods=['GET', 'PUT', 'DELETE'])
+api.add_url_rule('/tasks/', view_func=task_view, methods=['GET', 'POST', 'OPTIONS'])
+api.add_url_rule('/tasks/<string:task_id>', view_func=task_view, methods=['GET', 'PUT', 'DELETE', 'OPTIONS'])
