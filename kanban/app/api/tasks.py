@@ -1,5 +1,6 @@
 from flask import request, current_app
 from flask.views import MethodView
+from marshmallow.exceptions import ValidationError
 from ..mixin import CORSPreflightMixin
 from ..models import Task, db
 from ..schemas import TaskSchema
@@ -31,7 +32,7 @@ class TaskAPI(MethodView, CORSPreflightMixin):
             task = Task(title=data['title'], description=data['description'], status=data['status'])
             db.session.add(task)
             db.session.commit()
-            return dict(data=self.task_schema.dump(task), code=200), 200
+            return dict(data=self.task_schema.dump(task), code=201), 201
 
     def delete(self, task_id):
         task = Task.query.get_or_404(task_id)
