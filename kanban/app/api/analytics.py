@@ -8,6 +8,7 @@ from . import api
 
 
 class AnalyticsAPI(MethodView, CORSPreflightMixin):
+
     def __init__(self):
         self.analytic_schema = AnalyticsSchema()
         self.analytic_schemas = AnalyticsSchema(many=True)
@@ -24,27 +25,22 @@ class AnalyticsAPI(MethodView, CORSPreflightMixin):
 
     def post (self):
         try:
-            data = self.analytic_schema.load(request.json)
+            analytic = self.analytic_schema.load(request.json)
         except ValidationError as err:
             abort(400, err.messages)
         else:
-            analytic = Analytics(event=data['event'], data=data['data'])
-
             db.session.add(analytic)
             db.session.commit()
 
             return dict(data=self.analytic_schema.dump(analytic), code=201), 201
 
     def put (self, analytics_id):
-        analytic = Analytics.query.get_or_404(analytics_id)
         try:
-            data = self.analytic_schema.load(request.json ,partial=True)
+            analytic = Analytics.query.get_or_404(analytics_id)
+            analytic_updated = self.analytic_schema.load(request.json, instance=analytic ,partial=True)
         except ValidationError as err:
             abort(400, err.messages)
         else:
-            analytic.event = data.get('event', analytic.event)
-            analytic = data.get('data', analytic.data)
-
             db.session.add(analytic)
             db.session.commit()
 

@@ -25,11 +25,10 @@ class TaskAPI(MethodView, CORSPreflightMixin):
 
     def post(self):
         try:
-            data = self.task_schema.load(request.json)
+            task = self.task_schema.load(request.json)
         except ValidationError as err:
             abort(400, err.messages)
         else:
-            task = Task(title=data['title'], description=data['description'], status=data['status'])
             db.session.add(task)
             db.session.commit()
             return dict(data=self.task_schema.dump(task), code=201), 201
@@ -44,15 +43,11 @@ class TaskAPI(MethodView, CORSPreflightMixin):
     def put(self, task_id):
         try:
             task = Task.query.get_or_404(task_id)
-            data = self.task_schema.load(request.json, partial=True, unknown=True)
+            updated_task = self.task_schema.load(request.json, instance=task, partial=True)
         except ValidationError as err:
             abort(400, err.messages)
         else:
-            task.title = data.get('title', task.title)
-            task.description = data.get('title', task.description)
-            task.status = data.get('status', task.status)
-
-            db.session.add(task)
+            db.session.add(updated_task)
             db.session.commit()
 
             return dict(data=self.task_schema.dump(task), code=200), 200

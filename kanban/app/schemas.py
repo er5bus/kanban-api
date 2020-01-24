@@ -10,7 +10,7 @@ class TaskSchema(ma.ModelSchema):
     status = ma.String(max_length=200, required=True, validate=Length(max=200, min=1))
 
     class Meta:
-        Model = Task
+        model = Task
 
 
 class AnalyticsSchema(ma.ModelSchema):
@@ -20,4 +20,4 @@ class AnalyticsSchema(ma.ModelSchema):
     data = ma.Dict(keys=ma.Str(), values=ma.Str())
 
     class Meta:
-        Model = Analytics
+        model = Analytics
