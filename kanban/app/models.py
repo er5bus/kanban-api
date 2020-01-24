@@ -14,4 +14,4 @@ class Analytics(db.Model):
     __tablename__ = 'analytics'
     _id = db.Column(db.Integer, primary_key=True)
     event = db.Column(db.Text, nullable=True)
-    data = db.Colmun(db.PickleType, nullable=True)
+    data = db.Column(db.PickleType, nullable=True)
