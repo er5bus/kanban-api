@@ -4,6 +4,7 @@ from marshmallow.exceptions import ValidationError
 from ..schemas import AnalyticsSchema
 from ..models import Analytics, db
 from ..mixin import CORSPreflightMixin
+from . import api
 
 
 class AnalyticsAPI(MethodView, CORSPreflightMixin):
